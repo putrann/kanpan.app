@@ -10,7 +10,8 @@ export default class App extends React.Component {
       notes: [
         {
           id: uuid.v4(),
-          task: "Learn React"
+          task: "Learn React",
+          editing: true
         },
         {
           id: uuid.v4(),
@@ -26,10 +27,37 @@ export default class App extends React.Component {
       <div>
         <button onClick={this.addNote}>+</button>
 
-        <Notes notes={notes} onDelete={this.deleteNote} />
+        <Notes
+          notes={notes}
+          onDelete={this.deleteNote}
+          onNoteClick={this.activateNoteEdit}
+          onEdit={this.editNote}
+        />
       </div>
     );
   }
+  activateNoteEdit = id => {
+    this.setState({
+      notes: this.state.notes.map(note => {
+        if (note.id === id) {
+          note.editing = false;
+        }
+        return note;
+      })
+    });
+  };
+  editNote = (id, task) => {
+    this.setState({
+      notes: this.state.notes.map(note => {
+        if (note.id === id) {
+          note.editing = false;
+          note.task = task;
+        }
+        return note;
+      })
+    });
+  };
+
   deleteNote = (id, e) => {
     //avoid bubbling to edit
     e.stopPropagation();
